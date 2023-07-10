@@ -9,7 +9,7 @@ RUN apt-get update && apt-get install --yes --no-install-recommends apt-utils
 RUN apt-get update && \
     apt upgrade --yes && \
     apt-get install make --yes
-    
+
 RUN apt-get update && apt-get install latex2html --yes
 
 RUN apt-get update && \
@@ -21,7 +21,7 @@ RUN apt-get update && \
     python3 \
     python3-dev \
     python3-pip
-    
+
 
 RUN pip install --upgrade \
     black -U \
@@ -29,4 +29,9 @@ RUN pip install --upgrade \
     matplotlib \
     numpy \
     pandas \
+    pytest \
+    -U scikit-learn \
+    seaborn \
+    imblearn \
+    openpyxl \
     xarray
