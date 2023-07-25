@@ -34,4 +34,5 @@ RUN pip install --upgrade \
     seaborn \
     imblearn \
     openpyxl \
-    xarray
+    xarray \
+    wget
