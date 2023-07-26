@@ -35,4 +35,5 @@ RUN pip install --upgrade \
     imblearn \
     openpyxl \
     xarray \
-    wget
+    wget \
+    netcdf4
