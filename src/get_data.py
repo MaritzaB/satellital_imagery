@@ -1,5 +1,6 @@
 import wget
 from datetime import datetime
+from bs4 import BeautifulSoup
 
 def date_2_nday(date_str):
     date_object = datetime.strptime(date_str, "%Y%m%d")
@@ -33,7 +34,8 @@ def descargar_archivo(url, directory):
         print(f"Error al descargar el archivo: {e}")
 
 
-url, folder= get_url(2014,1,1)
+url, folder= get_url(2014,11,1)
+
 print(url, folder)
 
 descargar_archivo(url, folder)
