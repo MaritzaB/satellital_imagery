@@ -10,7 +10,7 @@ def date_2_nday(date_str):
 
 print(date_2_nday('20140101'))
 
-def get_url(year, month, day):
+def get_url_noaa(year, month, day):
     folder = 'data'
     processing_level = 'L4'
     fecha = f'{year}{"{:02d}".format(month)}{"{:02d}".format(day)}'
@@ -25,6 +25,15 @@ def get_url(year, month, day):
     directory = f'{folder}/{filename}'
     return url, directory
 
+
+min_lat = 25.933687
+max_lat = 51.25798
+min_lon = -158.980523
+max_lon = -114.42687
+
+def get_url_errdap():
+    url = 
+
 def descargar_archivo(url, directory):
     try:
         print(url)
@@ -34,7 +43,7 @@ def descargar_archivo(url, directory):
         print(f"Error al descargar el archivo: {e}")
 
 
-url, folder= get_url(2014,11,1)
+url, folder= get_url_noaa(2014,11,1)
 
 print(url, folder)
 
