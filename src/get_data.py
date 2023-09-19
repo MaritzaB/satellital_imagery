@@ -26,13 +26,16 @@ def get_url_noaa(year, month, day):
     return url, directory
 
 
-min_lat = 25.933687
-max_lat = 51.25798
-min_lon = -158.980523
-max_lon = -114.42687
-
 def get_url_errdap():
-    url = 
+    min_lat = 25.933687
+    max_lat = 51.25798
+    min_lon = -158.980523
+    max_lon = -114.42687
+    src = f'https://coastwatch.pfeg.noaa.gov/erddap/griddap'
+    variable = 'sea_surface_temperature'
+    fecha = '2023-06-30T12:00:00Z'
+    url = f'{src}/nceiPH53sstd1day.nc?{variable}%5B({fecha})%5D%5B({max_lat}):({min_lat})%5D%5B({min_lon}):({max_lon})%5D&.draw=surface&.vars=longitude%7Clatitude%7Csea_surface_temperature&.colorBar=%7C%7C%7C%7C%7C&.bgColor=0xffccccff'
+    return url
 
 def descargar_archivo(url, directory):
     try:
@@ -42,6 +45,8 @@ def descargar_archivo(url, directory):
     except Exception as e:
         print(f"Error al descargar el archivo: {e}")
 
+url_erddap = get_url_errdap()
+print('url del erddapL ', url_erddap)
 
 url, folder= get_url_noaa(2014,11,1)
 
