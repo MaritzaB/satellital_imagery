@@ -27,7 +27,11 @@ def clip_netCDF(input_file):
     # Remove the original file
     os.remove(input_file)
 
-dataset = glob.glob('src/data/chlc/2014/02/*.nc')
+# Get a list of all the netCDF files in the data directory
+dataset = glob.glob('data/*.nc')
+
+# Ignore file if it has already been clipped
+dataset = [file for file in dataset if '_clipped' not in file]
 
 for file in dataset:
     print(file)
