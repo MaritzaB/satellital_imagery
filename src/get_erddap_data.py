@@ -24,7 +24,7 @@ def get_chlc_data(year, month):
     src = f'https://coastwatch.pfeg.noaa.gov/erddap/griddap/nesdisVHNSQchlaMonthly.nc?chlor_a'
     url = f'{src}%5B({year}-{month}-01T12:00:00Z)%5D%5B(0.0)%5D%5B({min_lat}):({max_lat})%5D%5B({min_lon}):({max_lon})%5D&.draw=surface&.vars=longitude%7Clatitude%7Cchlor_a&.colorBar=%7C%7C%7C%7C%7C&.bgColor=0xffccccff'
     print(url)
-    directory = f'chlc/{year}/'
+    directory = f'chlc/{year}/{month}/'
     os.makedirs(directory, exist_ok=True)
     descargar_archivo(url, directory)
 
