@@ -10,13 +10,6 @@ def descargar_archivo(url, directory):
     except Exception as e:
         print(f"Error al descargar el archivo: {e}")
         
-def get_SST_data(year, month):
-    '''
-    Source: 
-    '''
-    url = f'https://coastwatch.pfeg.noaa.gov/erddap/griddap/erdHadISST.nc?sst%5B(2018-01-16T12:00:00Z):1:(2018-04-16T12:00:00Z)%5D%5B(89.5):1:(-89.5)%5D%5B(-179.5):1:(179.5)%5D'
-    print(url)
-
 def get_chlc_data(year, month):
     '''
     Source: 'https://coastwatch.pfeg.noaa.gov/erddap/griddap/nesdisVHNSQchlaMonthly.graph?chlor_a'
@@ -33,10 +26,35 @@ max_lat = 55
 min_lon = -163
 max_lon = -110
 
+def get_wind_data(year, month, day, dist_surface=10):
+    '''
+    Source: FNMOC 10m Surface Winds, 360x181, Monthly, Lon+/-180
+    https://coastwatch.pfeg.noaa.gov/erddap/griddap/erdlasFnWind10_LonPM180.graph
+    
+    Source: FNMOC 20m Surface Winds, 360x181, Monthly, Lon+/-180
+    https://coastwatch.pfeg.noaa.gov/erddap/griddap/erdlasFnWind20_LonPM180.graph
+    '''
+    latitude_ranges = f'%5D%5B({min_lat}):({max_lat})'
+    longitude_ranges = f'%5D%5B({min_lon}):({max_lon})'
+    year_month = f'{year}-{month}-{day}T00:00:00Z'
+    #src = f'https://coastwatch.pfeg.noaa.gov/erddap/griddap/erdlasFnWind{dist_surface}_LonPM180.nc'
+    #url =
+    #f'{src}?u_mean%5B({year}-{month}-01T00:00:00Z){latitude_ranges}{longitude_ranges}%5D,v_mean%5B({year}-{month}-01T00:00:00Z){latitude_ranges}{longitude_ranges}%5D&.draw=vectors&.vars=longitude%7Clatitude%7Cu_mean%7Cv_mean&.color=0x000000&.bgColor=0xffccccff'
+    ### NAVGEM 10m Surface Wind Lon+/-180
+    src = f'https://coastwatch.pfeg.noaa.gov/erddap/griddap/erdNavgem05D10mWind_LonPM180.nc'
+    url = f'{src}?wnd_ucmp_height_above_ground%5B({year_month})%5D%5B(10.0){latitude_ranges}{longitude_ranges}%5D,wnd_vcmp_height_above_ground%5B({year_month})%5D%5B(10.0){latitude_ranges}{longitude_ranges}%5D&.draw=vectors&.vars=longitude%7Clatitude%7Cwnd_ucmp_height_above_ground%7Cwnd_vcmp_height_above_ground&.color=0x000000&.bgColor=0xffccccff'
+    print(url)
+    directory = f'wind/{year}/{month}/'
+    os.makedirs(directory, exist_ok=True)
+    descargar_archivo(url, directory)
+
 years = [2014, 2015, 2016, 2017, 2018]
 months = [f'{i:02d}' for i in range(1, 13) ]
+days = [f'{i:02d}' for i in range(1, 32) ]
 
 for year in years:
     for month in months:
-        get_chlc_data(year, month)
+        for day in days:
+            get_wind_data(year, month, day)
+        #get_chlc_data(year, month)
 
