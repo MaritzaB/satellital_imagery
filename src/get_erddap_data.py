@@ -51,10 +51,15 @@ def get_wind_data(year, month, day, dist_surface=10):
 years = [2014, 2015, 2016, 2017, 2018]
 months = [f'{i:02d}' for i in range(1, 13) ]
 days = [f'{i:02d}' for i in range(1, 32) ]
+data = 'chlc'
+#data = 'wind'
 
-for year in years:
-    for month in months:
-        for day in days:
-            get_wind_data(year, month, day)
-        #get_chlc_data(year, month)
-
+if data == 'chlc':
+    for year in years:
+        for month in months:
+            get_chlc_data(year, month)
+elif data == 'wind':
+    for year in years:
+        for month in months:
+            for day in days:
+                get_wind_data(year, month, day)
