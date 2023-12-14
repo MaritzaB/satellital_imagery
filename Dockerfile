@@ -36,4 +36,5 @@ RUN pip install --upgrade \
     openpyxl \
     xarray \
     wget \
-    netcdf4
+    netcdf4 \
+    basemap
