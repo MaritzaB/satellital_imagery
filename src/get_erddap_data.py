@@ -2,10 +2,10 @@ import wget
 from datetime import datetime
 import os
 
-def descargar_archivo(url, directory):
+def descargar_archivo(url, filename):
     try:
         print(url)
-        wget.download(url, directory)
+        wget.download(url, out=filename)
         print("\nDescarga completada.")
     except Exception as e:
         print(f"Error al descargar el archivo: {e}")
@@ -43,16 +43,18 @@ def get_wind_data(year, month, day, dist_surface=10):
     ### NAVGEM 10m Surface Wind Lon+/-180
     src = f'https://coastwatch.pfeg.noaa.gov/erddap/griddap/erdNavgem05D10mWind_LonPM180.nc'
     url = f'{src}?wnd_ucmp_height_above_ground%5B({year_month})%5D%5B(10.0){latitude_ranges}{longitude_ranges}%5D,wnd_vcmp_height_above_ground%5B({year_month})%5D%5B(10.0){latitude_ranges}{longitude_ranges}%5D&.draw=vectors&.vars=longitude%7Clatitude%7Cwnd_ucmp_height_above_ground%7Cwnd_vcmp_height_above_ground&.color=0x000000&.bgColor=0xffccccff'
+    directory = f'wind/'
+    file_name = f'{directory}/{year}{month}{day}_FNMOC_10m_Surface_Winds.nc'
     print(url)
-    directory = f'wind/{year}/{month}/'
     os.makedirs(directory, exist_ok=True)
-    descargar_archivo(url, directory)
+    descargar_archivo(url, file_name)
 
 years = [2014, 2015, 2016, 2017, 2018]
 months = [f'{i:02d}' for i in range(1, 13) ]
 days = [f'{i:02d}' for i in range(1, 32) ]
-data = 'chlc'
-#data = 'wind'
+
+#data = 'chlc'
+data = 'wind'
 
 if data == 'chlc':
     for year in years:
