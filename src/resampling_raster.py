@@ -1,6 +1,28 @@
 import xarray as xr
+import glob as glob
+import os
 from rasterio.warp import reproject, Resampling, calculate_default_transform
 import rasterio
+
+def netcdf_to_tif(nc_file, *variables):
+    """
+    Convert netCDF file to tif.
+    If multiple variables are provided, each variable will be converted to a
+    separate tif.
+    """
+    ds = xr.open_dataset(nc_file)
+    filename = os.path.basename(nc_file)
+    processed_dir = os.path.dirname(nc_file) + '/processed'
+    if not os.path.exists(processed_dir):
+        os.makedirs(processed_dir)
+    for var in variables:
+        da = ds[var]
+        da.rio.set_spatial_dims(x_dim="lon", y_dim="lat", inplace=True)
+        crs = 'EPSG:4326'
+        da.rio.write_crs(crs, inplace=True)
+        da.rio.to_raster(f'{processed_dir}/{filename[:-3]}_{var}.tif')
+        print(f'Converted {var} to tif: {processed_dir}/{filename[:-3]}_{var}.tif')
+    ds.close()
 
 def reproj_match(infile, match, outfile):
     """Reproject a file to match the shape and projection of existing raster. 
@@ -48,7 +70,46 @@ def reproj_match(infile, match, outfile):
                     dst_transform=dst_transform,
                     dst_crs=dst_crs,
                     resampling=Resampling.nearest)
-                
-match_dataset = xr.open_dataset('data/winds/cmems_obs-wind_glo_phy_my_l4_P1M_201401_clipped.nc')
-input_file = xr.open_dataset('data/2014/01/2014_01_jplMURSST41_.nc')
-outfile = 'data/2014/01/2014_01_jplMURSST41_resampled.nc'
+
+def get_filenames(year, month):
+    directory = f'data/{year}/{month}'
+    sst_file = f'{directory}/{year}_{month}_jplMURSST41_.tif'
+    chla_file = f'{directory}/{year}_{month}_NESDIS_VHNSQ_chla.tif'
+    processed_dir = f'{directory}/processed'
+    if not os.path.exists(processed_dir):
+        os.makedirs(processed_dir)
+    out_sst = f'{processed_dir}/{year}_{month}_jplMURSST41_reproj.tif'
+    out_chla = f'{processed_dir}/{year}_{month}_NESDIS_VHNSQ_chla_reproj.tif'
+    return sst_file, chla_file, out_sst, out_chla
+
+def wind_to_tif(years, months):
+    for year in years:
+        for month in months:
+            wind_file = f'data/{year}/{month}/cmems_obs-wind_glo_phy_my_l4_P1M_{year}{month}_clipped.nc'
+            netcdf_to_tif(wind_file, 'eastward_wind', 'northward_wind')
+
+def reprojection(years, months):
+    for year in years:
+        for month in months:
+            print(f'Processing {year}-{month}')
+            sst_file, chla_file, out_sst, out_chla = get_filenames(year, month)
+            reproj_match(sst_file, chla_file, out_sst)
+            reproj_match(chla_file, sst_file, out_chla)
+
+years = [year for year in range(2014, 2019)]
+months = [f'{i:02d}' for i in range(1, 13) ]
+
+wind_to_tif(years, months)
+reprojection(years, months)
+
+def clean_processed():
+    for year in years:
+        for month in months:
+            directory = f'data/{year}/{month}'
+            processed_dir = f'{directory}/processed'
+            for file in glob.glob(f'{processed_dir}/*'):
+                os.remove(file)
+            os.rmdir(processed_dir)
+
+# Uncomment next line to clean processed directory
+# clean_processed()
