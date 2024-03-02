@@ -28,11 +28,10 @@ def clip_netCDF(input_file):
     os.remove(input_file)
 
 # Get a list of all the netCDF files in the data directory
-dataset = glob.glob('data/*.nc')
 
-# Ignore file if it has already been clipped
-dataset = [file for file in dataset if '_clipped' not in file]
+months = [f'{i:02d}' for i in range(1, 13) ]
 
-for file in dataset:
-    print(file)
-    clip_netCDF(file)
+for year in range(2014, 2019):
+    for month in months:
+        file = f'data/{year}/{month}/cmems_obs-wind_glo_phy_my_l4_P1M_{year}{month}.nc'
+        clip_netCDF(file)

@@ -24,17 +24,22 @@ RUN apt-get update && \
 
 
 RUN pip install --upgrade \
+    -U scikit-learn \
+    basemap \
     black -U \
+    folium \
+    geopandas \
+    geopy \
+    imblearn \
     ipykernel \
     matplotlib \
+    netcdf4 \
     numpy \
+    openpyxl \
     pandas \
     pytest \
-    -U scikit-learn \
+    rasterio \
+    rioxarray \
     seaborn \
-    imblearn \
-    openpyxl \
-    xarray \
     wget \
-    netcdf4 \
-    basemap
+    xarray

@@ -27,10 +27,10 @@ def get_sst_data(year, month):
     '''
     #src='https://coastwatch.pfeg.noaa.gov/erddap/griddap/erdHadISST.nc?sst%'
     #url=f'{src}5B({year}-{month}-16T12:00:00Z)%5D%5B({min_lat}):({max_lat})%5D%5B({min_lon}):({max_lon})%5D&.draw=surface&.vars=longitude%7Clatitude%7Csst&.colorBar=%7C%7C%7C%7C%7C&.bgColor=0xffccccff'
-    src = 'https://coastwatch.pfeg.noaa.gov/erddap/griddap/jplMURSST41mday.geotif?sst%'
+    src = 'https://coastwatch.pfeg.noaa.gov/erddap/griddap/jplMURSST41mday.nc?sst%'
     url = f'{src}5B({year}-{month}-16T00:00:00Z)%5D%5B({min_lat}):({max_lat})%5D%5B({min_lon}):({max_lon})%5D&.draw=surface&.vars=longitude%7Clatitude%7Csst&.colorBar=%7C%7C%7C%7C%7C&.bgColor=0xffccccff'
     directory = create_directory(year, month)
-    filename = f'{directory}/{year}_{month}_jplMURSST41_.tif'
+    filename = f'{directory}/{year}_{month}_jplMURSST41_.nc'
     descargar_archivo(url, filename)
     
 def get_wind_data(year, month, dist_surface=10):
@@ -57,11 +57,11 @@ def get_chlc_data(year, month):
     '''
     Source: 'https://coastwatch.pfeg.noaa.gov/erddap/griddap/nesdisVHNSQchlaMonthly.graph?chlor_a'
     '''
-    src = f'https://coastwatch.pfeg.noaa.gov/erddap/griddap/nesdisVHNSQchlaMonthly.geotif?chlor_a'
+    src = f'https://coastwatch.pfeg.noaa.gov/erddap/griddap/nesdisVHNSQchlaMonthly.nc?chlor_a'
     url = f'{src}%5B({year}-{month}-01T12:00:00Z)%5D%5B(0.0)%5D%5B({min_lat}):({max_lat})%5D%5B({min_lon}):({max_lon})%5D&.draw=surface&.vars=longitude%7Clatitude%7Cchlor_a&.colorBar=%7C%7C%7C%7C%7C&.bgColor=0xffccccff'
     print(url)
     directory = create_directory(year, month)
-    filename = f'{directory}/{year}_{month}_NESDIS_VHNSQ_chla.tif'
+    filename = f'{directory}/{year}_{month}_NESDIS_VHNSQ_chla.nc'
     descargar_archivo(url, filename)
 
 def process_data(process_function, years, months):

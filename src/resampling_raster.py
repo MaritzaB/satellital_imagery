@@ -1,4 +1,5 @@
 import xarray as xr
+import rioxarray as rxr
 import glob as glob
 import os
 from rasterio.warp import reproject, Resampling, calculate_default_transform
@@ -16,8 +17,17 @@ def netcdf_to_tif(nc_file, *variables):
     if not os.path.exists(processed_dir):
         os.makedirs(processed_dir)
     for var in variables:
-        da = ds[var]
-        da.rio.set_spatial_dims(x_dim="lon", y_dim="lat", inplace=True)
+        if var == 'sst':
+            da = ds[var]
+            da.rio.set_spatial_dims('longitude', 'latitude', inplace=True)
+        elif var == 'chlor_a':
+            da = ds[var].isel(altitude=0)
+            da.rio.set_spatial_dims('longitude', 'latitude', inplace=True)
+            if 'grid_mapping' in da.attrs:
+                da.attrs.pop('grid_mapping')
+        else:
+            da = ds[var]
+            da.rio.set_spatial_dims('lon', 'lat', inplace=True)
         crs = 'EPSG:4326'
         da.rio.write_crs(crs, inplace=True)
         da.rio.to_raster(f'{processed_dir}/{filename[:-3]}_{var}.tif')
@@ -73,7 +83,7 @@ def reproj_match(infile, match, outfile):
 
 def get_filenames(year, month):
     directory = f'data/{year}/{month}'
-    sst_file = f'{directory}/{year}_{month}_jplMURSST41_.tif'
+    sst_file = f'{directory}/{year}_{month}_jplMURSST41__.tif'
     chla_file = f'{directory}/{year}_{month}_NESDIS_VHNSQ_chla.tif'
     processed_dir = f'{directory}/processed'
     if not os.path.exists(processed_dir):
@@ -88,6 +98,18 @@ def wind_to_tif(years, months):
             wind_file = f'data/{year}/{month}/cmems_obs-wind_glo_phy_my_l4_P1M_{year}{month}_clipped.nc'
             netcdf_to_tif(wind_file, 'eastward_wind', 'northward_wind')
 
+def chlc_to_tif(years, months):
+    for year in years:
+        for month in months:
+            chlc_file = f'data/{year}/{month}/{year}_{month}_NESDIS_VHNSQ_chla_chlor_a.nc'
+            netcdf_to_tif(chlc_file, 'chlor_a')
+            
+def sst_to_tif(years, months):
+    for year in years:
+        for month in months:
+            sst_file = f'data/{year}/{month}/{year}_{month}_jplMURSST41__sst.nc'
+            netcdf_to_tif(sst_file, 'sst')
+
 def reprojection(years, months):
     for year in years:
         for month in months:
@@ -99,7 +121,12 @@ def reprojection(years, months):
 years = [year for year in range(2014, 2019)]
 months = [f'{i:02d}' for i in range(1, 13) ]
 
+# Create tif files
 wind_to_tif(years, months)
+sst_to_tif(years, months)
+chlc_to_tif(years, months)
+
+# Resample tif files
 reprojection(years, months)
 
 def clean_processed():
@@ -112,4 +139,4 @@ def clean_processed():
             os.rmdir(processed_dir)
 
 # Uncomment next line to clean processed directory
-# clean_processed()
+#clean_processed()
