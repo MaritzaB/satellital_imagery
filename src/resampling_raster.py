@@ -83,9 +83,9 @@ def reproj_match(infile, match, outfile):
 
 def get_filenames(year, month):
     directory = f'data/{year}/{month}'
-    sst_file = f'{directory}/{year}_{month}_jplMURSST41__.tif'
-    chla_file = f'{directory}/{year}_{month}_NESDIS_VHNSQ_chla.tif'
     processed_dir = f'{directory}/processed'
+    sst_file = f'{processed_dir}/{year}_{month}_jplMURSST41__sst.tif'
+    chla_file = f'{processed_dir}/{year}_{month}_NESDIS_VHNSQ_chla_chlor_a.tif'
     if not os.path.exists(processed_dir):
         os.makedirs(processed_dir)
     out_sst = f'{processed_dir}/{year}_{month}_jplMURSST41_reproj.tif'
@@ -101,13 +101,13 @@ def wind_to_tif(years, months):
 def chlc_to_tif(years, months):
     for year in years:
         for month in months:
-            chlc_file = f'data/{year}/{month}/{year}_{month}_NESDIS_VHNSQ_chla_chlor_a.nc'
+            chlc_file = f'data/{year}/{month}/{year}_{month}_NESDIS_VHNSQ_chla.nc'
             netcdf_to_tif(chlc_file, 'chlor_a')
             
 def sst_to_tif(years, months):
     for year in years:
         for month in months:
-            sst_file = f'data/{year}/{month}/{year}_{month}_jplMURSST41__sst.nc'
+            sst_file = f'data/{year}/{month}/{year}_{month}_jplMURSST41_.nc'
             netcdf_to_tif(sst_file, 'sst')
 
 def reprojection(years, months):
