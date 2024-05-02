@@ -84,13 +84,15 @@ def reproj_match(infile, match, outfile):
 def get_filenames(year, month):
     directory = f'data/{year}/{month}'
     processed_dir = f'{directory}/processed'
+    resampled_data_dir = f'{processed_dir}/resampled_data'
     sst_file = f'{processed_dir}/{year}_{month}_jplMURSST41__sst.tif'
     chla_file = f'{processed_dir}/{year}_{month}_NESDIS_VHNSQ_chla_chlor_a.tif'
-    if not os.path.exists(processed_dir):
-        os.makedirs(processed_dir)
-    out_sst = f'{processed_dir}/{year}_{month}_jplMURSST41_reproj.tif'
-    out_chla = f'{processed_dir}/{year}_{month}_NESDIS_VHNSQ_chla_reproj.tif'
-    return sst_file, chla_file, out_sst, out_chla
+    match_file = f'{processed_dir}/cmems_obs-wind_glo_phy_my_l4_P1M_{year}{month}_clipped_eastward_wind.tif'
+    if not os.path.exists(resampled_data_dir):
+        os.makedirs(resampled_data_dir)
+    out_sst = f'{resampled_data_dir}/{year}_{month}_jplMURSST41_reproj.tif'
+    out_chla = f'{resampled_data_dir}/{year}_{month}_NESDIS_VHNSQ_chla_reproj.tif'
+    return sst_file, chla_file, out_sst, out_chla, match_file
 
 def wind_to_tif(years, months):
     for year in years:
@@ -114,29 +116,32 @@ def reprojection(years, months):
     for year in years:
         for month in months:
             print(f'Processing {year}-{month}')
-            sst_file, chla_file, out_sst, out_chla = get_filenames(year, month)
-            reproj_match(sst_file, chla_file, out_sst)
-            reproj_match(chla_file, sst_file, out_chla)
+            sst_file, chla_file, out_sst, out_chla, match_file = get_filenames(year, month)
+            reproj_match(sst_file, match_file, out_sst)
+            reproj_match(chla_file, match_file, out_chla)
 
-years = [year for year in range(2014, 2019)]
-months = [f'{i:02d}' for i in range(1, 13) ]
+sampled_years = [year for year in range(2014, 2019)]
+sampled_months = [f'{i:02d}' for i in range(1, 13) ]
 
-# Create tif files
-wind_to_tif(years, months)
-sst_to_tif(years, months)
-chlc_to_tif(years, months)
-
-# Resample tif files
-reprojection(years, months)
 
 def clean_processed():
-    for year in years:
-        for month in months:
+    for year in sampled_years:
+        for month in sampled_months:
             directory = f'data/{year}/{month}'
             processed_dir = f'{directory}/processed'
             for file in glob.glob(f'{processed_dir}/*'):
                 os.remove(file)
             os.rmdir(processed_dir)
 
-# Uncomment next line to clean processed directory
-#clean_processed()
+# Select the process you want to run (1 for resampling, 2 for cleaning)
+# 1
+if input('Press 1 to resample data or 0 to clean processed directory: ') == '1':
+    # Create tif files
+    wind_to_tif(sampled_years, sampled_months)
+    sst_to_tif(sampled_years, sampled_months)
+    chlc_to_tif(sampled_years, sampled_months)
+    # Resample tif files
+    reprojection(sampled_years, sampled_months)
+# 0
+else:
+    clean_processed()
