@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
 import xarray as xr
-import glob as glob
 import os
 
 def clip_netCDF(input_file):

@@ -22,11 +22,8 @@ def create_directory(year, month):
         
 def get_sst_data(year, month):
     '''
-    Source: 'https://coastwatch.pfeg.noaa.gov/erddap/griddap/erdHadISST.graph'
-    Source2: 'https://coastwatch.pfeg.noaa.gov/erddap/griddap/jplMURSST41mday.graph'
+    Source: 'https://coastwatch.pfeg.noaa.gov/erddap/griddap/jplMURSST41mday.graph'
     '''
-    #src='https://coastwatch.pfeg.noaa.gov/erddap/griddap/erdHadISST.nc?sst%'
-    #url=f'{src}5B({year}-{month}-16T12:00:00Z)%5D%5B({min_lat}):({max_lat})%5D%5B({min_lon}):({max_lon})%5D&.draw=surface&.vars=longitude%7Clatitude%7Csst&.colorBar=%7C%7C%7C%7C%7C&.bgColor=0xffccccff'
     src = 'https://coastwatch.pfeg.noaa.gov/erddap/griddap/jplMURSST41mday.nc?sst%'
     url = f'{src}5B({year}-{month}-16T00:00:00Z)%5D%5B({min_lat}):({max_lat})%5D%5B({min_lon}):({max_lon})%5D&.draw=surface&.vars=longitude%7Clatitude%7Csst&.colorBar=%7C%7C%7C%7C%7C&.bgColor=0xffccccff'
     directory = create_directory(year, month)
