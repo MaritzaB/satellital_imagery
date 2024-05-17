@@ -42,4 +42,6 @@ RUN pip install --upgrade \
     rioxarray \
     seaborn \
     wget \
-    xarray
+    xarray \
+    copernicusmarine
+
