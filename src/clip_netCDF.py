@@ -7,9 +7,9 @@ def clip_netCDF(input_file):
     ds = xr.open_dataset(input_file)
 
     # Define the region of interest
-    min_lat = 23
-    max_lat = 55
-    min_lon = -163
+    min_lat = 10
+    max_lat = 61
+    min_lon = -180
     max_lon = -110
     
     # Clip the data to the region of interest
