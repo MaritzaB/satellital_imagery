@@ -79,7 +79,7 @@ data_processing_functions = {
     'sst': process_sst_data
 }
 
-years = [2014, 2015, 2016, 2017, 2018]
+years = [ year for year in range(2014, 2018)]
 months = [f'{i:02d}' for i in range(1, 13) ]
 datatype = ['wind']
 
