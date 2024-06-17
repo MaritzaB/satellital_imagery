@@ -12,7 +12,8 @@ def write_raster(netcdf, new_directory):
     ds = rxr.open_rasterio(netcdf)
     for var in ds.data_vars:
         #print(f'Writing {var} to raster')
-        ds[var].rio.to_raster(f'{new_directory}{var}.tif')
+        CRS = 'EPSG:4326'
+        ds[var].rio.write_crs(CRS).rio.to_raster(f'{new_directory}{var}.tif')
       
 def verify_shape(input_shape, reference_shape):
     if input_shape == reference_shape:
