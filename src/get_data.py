@@ -56,13 +56,45 @@ def get_wind_data(year, month):
         output_filename=f"data/{year}/{month}/cmems_obs-wind_glo_phy_my_l4_P1M_{year}{month}.nc"
     )
     
+def get_BBP_data(year, month):
+    cm.subset(
+        dataset_id="cmems_obs-oc_glo_bgc-optics_nrt_l4-multi-4km_P1M",
+        dataset_version="202311",
+        variables=["BBP"],
+        minimum_longitude=min_lon,
+        maximum_longitude=max_lon,
+        minimum_latitude=min_lat,
+        maximum_latitude=max_lat,
+        start_datetime=f"{year}-{month}-01T00:00:00",
+        end_datetime=f"{year}-{month}-01T00:00:00",
+        output_filename=f"data/{year}/{month}/Bio-geochemical_BBP_{year}{month}.nc"
+    )
 
+def get_CDM_data(year, month):
+    cm.subset(
+        dataset_id="cmems_obs-oc_glo_bgc-optics_nrt_l4-multi-4km_P1M",
+        dataset_version="202311",
+        variables=["CDM"],
+        minimum_longitude=min_lon,
+        maximum_longitude=max_lon,
+        minimum_latitude=min_lat,
+        maximum_latitude=max_lat,
+        start_datetime=f"{year}-{month}-01T00:00:00",
+        end_datetime=f"{year}-{month}-01T00:00:00",
+        output_filename=f"data/{year}/{month}/Bio-geochemical_CDM_{year}{month}.nc"
+    )
 
 def process_data(process_function, years, months):
     for year in years:
         for month in months:
             process_function(year, month)
             # pause = input('Press enter to continue: ')
+            
+def process_BBP_data(year, month):
+    get_BBP_data(year, month)
+
+def process_CDM_data(year, month):
+    get_CDM_data(year, month)
 
 def process_chlc_data(year, month):
     get_chlc_data(year, month)
@@ -75,13 +107,16 @@ def process_sst_data(year, month):
 
 data_processing_functions = {
     'chlc': process_chlc_data,
+    'BBP': process_BBP_data,
+    'CDM': process_CDM_data,
     'wind': process_wind_data,
     'sst': process_sst_data
 }
 
 years = [ year for year in range(2014, 2018)]
-months = [f'{i:02d}' for i in range(1, 13) ]
-datatype = ['wind']
+months = [f'{i:02d}' for i in range(1, 3) ]
+#datatype = ['chlc', 'BBP', 'CDM', 'wind', 'sst']
+datatype = ['BBP', 'CDM']
 
 for data in datatype:
     if data in data_processing_functions:
