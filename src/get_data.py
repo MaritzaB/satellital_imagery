@@ -7,7 +7,7 @@ def descargar_archivo(url, filename):
     try:
         print(url)
         wget.download(url, out=filename)
-        print("\nDescarga completada.")
+        print(f"\nDescarga completada: {filename}")
     except Exception as e:
         print(f"Error al descargar el archivo: {e}")
 
@@ -46,13 +46,14 @@ def get_wind_data(year, month):
     cm.subset(
         dataset_id="cmems_obs-wind_glo_phy_my_l4_P1M",
         dataset_version="202211",
-        variables=["eastward_stress", "eastward_stress_bias", "eastward_stress_sdd", "eastward_wind", "eastward_wind_bias", "eastward_wind_sdd", "northward_stress", "northward_stress_bias", "northward_stress_sdd", "northward_wind", "northward_wind_bias", "northward_wind_sdd", "number_of_observations"],
+        variables=["eastward_wind", "northward_wind",],
         minimum_longitude=min_lon,
         maximum_longitude=max_lon,
         minimum_latitude=min_lat,
         maximum_latitude=max_lat,
         start_datetime=f"{year}-{month}-01T00:00:00",
         end_datetime=f"{year}-{month}-01T00:00:00",
+        force_download=True,
         output_filename=f"data/{year}/{month}/cmems_obs-wind_glo_phy_my_l4_P1M_{year}{month}.nc"
     )
     
@@ -114,9 +115,9 @@ data_processing_functions = {
 }
 
 years = [ year for year in range(2014, 2018)]
-months = [f'{i:02d}' for i in range(1, 3) ]
-#datatype = ['chlc', 'BBP', 'CDM', 'wind', 'sst']
-datatype = ['BBP', 'CDM']
+months = [f'{i:02d}' for i in range(1, 4) ]
+datatype = ['chlc', 'sst', 'wind']
+#datatype = ['BBP', 'CDM']
 
 for data in datatype:
     if data in data_processing_functions:

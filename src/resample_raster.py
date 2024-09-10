@@ -68,7 +68,7 @@ def downsample_all_files(year, month):
     resample_chla_raster(chla_file, match_file, new_dir)
     
 years = [ f'{i:04d}' for i in range(2014, 2018)]
-months = [f'{i:02d}' for i in range(1, 13)]
+months = [f'{i:02d}' for i in range(1, 4)]
 
 for year in years:
     for month in months:
