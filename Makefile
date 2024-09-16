@@ -5,4 +5,7 @@ clean:
 	rm -rf resampled_data/
 
 login:
-	copernicusmarin login	# Set up your credentials for the Copernicus Marine Service
+	copernicusmarine login	# Set up your credentials for the Copernicus Marine Service
+
+resample:
+	python3 src/resample_raster.py

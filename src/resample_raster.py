@@ -11,7 +11,7 @@ def make_dir(directory):
 def write_raster(netcdf, new_directory):
     ds = rxr.open_rasterio(netcdf)
     for var in ds.data_vars:
-        #print(f'Writing {var} to raster')
+        print(f'Writing {var} to raster')
         CRS = 'EPSG:4326'
         ds[var].rio.write_crs(CRS).rio.to_raster(f'{new_directory}{var}.tif')
       
@@ -67,7 +67,7 @@ def downsample_all_files(year, month):
     resample_sst_raster(sst_file, match_file, new_dir)
     resample_chla_raster(chla_file, match_file, new_dir)
     
-years = [ f'{i:04d}' for i in range(2014, 2018)]
+years = [ f'{i:04d}' for i in range(2014, 2019)]
 months = [f'{i:02d}' for i in range(1, 4)]
 
 for year in years:

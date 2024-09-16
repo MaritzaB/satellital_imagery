@@ -11,10 +11,17 @@ def descargar_archivo(url, filename):
     except Exception as e:
         print(f"Error al descargar el archivo: {e}")
 
-min_lat = 10
-max_lat = 61
-min_lon = -179
-max_lon = -110
+# Region where the model will be projected
+#min_lat = 10
+#max_lat = 61
+#min_lon = -179
+#max_lon = -110
+
+#
+min_lat = 23.5
+max_lat = 53
+min_lon = -160
+max_lon = -112
 
 def create_directory(year, month):
     directory = f'data/{year}/{month}'
@@ -88,6 +95,7 @@ def get_CDM_data(year, month):
 def process_data(process_function, years, months):
     for year in years:
         for month in months:
+            print(f'Processing data for {year}-{month}')
             process_function(year, month)
             # pause = input('Press enter to continue: ')
             
@@ -114,7 +122,7 @@ data_processing_functions = {
     'sst': process_sst_data
 }
 
-years = [ year for year in range(2014, 2018)]
+years = [ year for year in range(2014, 2019)]
 months = [f'{i:02d}' for i in range(1, 4) ]
 datatype = ['chlc', 'sst', 'wind']
 #datatype = ['BBP', 'CDM']
