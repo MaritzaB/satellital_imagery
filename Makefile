@@ -5,8 +5,11 @@ clean:
 	rm -rf resampled_data/
 	rm -rf src/__pycache__/
 
+include .env
+export $(shell sed 's/=.*//' .env)
 login:
-	copernicusmarine login	# Set up your credentials for the Copernicus Marine Service
+	@echo "Logging in to Copernicus Marine Service"
+	echo "$(USERNAME)\n$(PASSWORD)" | copernicusmarine login
 
 resample:
 	python3 src/resample_raster.py
