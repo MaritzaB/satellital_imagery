@@ -9,7 +9,7 @@ include .env
 export $(shell sed 's/=.*//' .env)
 login:
 	@echo "Logging in to Copernicus Marine Service"
-	echo "$(USERNAME)\n$(PASSWORD)" | copernicusmarine login
+	copernicusmarine login
 
 resample:
 	python3 src/resample_raster.py
