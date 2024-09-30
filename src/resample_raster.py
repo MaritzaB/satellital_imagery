@@ -50,10 +50,11 @@ def resample_chla_raster(input_file, reference_file, new_directory):
     input_ds = input_ds['chlor_a'].isel(altitude=0)
     input_ds = input_ds.rio.write_crs(CRS)
     reprojected = input_ds.rio.reproject_match(reference_ds, resampling=Resampling.average)
+    #reprojected = input_ds                     # Si no se quiere reescalar la resolución de chla
     reprojected.attrs.pop('grid_mapping', None)
     reprojected = reprojected.rio.write_crs(CRS)
     output_file = input_ds.name + '_resampled.tif'
-    if verify_shape(reprojected.shape, reference_ds.shape):
+    if verify_shape(reprojected.shape, reference_ds.shape):     # Eliminar la condición si no se quiere reescalar la resolución de chla
         reprojected.rio.to_raster(f'{new_directory}/{output_file}')
         #print('Chla and Wind shapes match')
     else:
@@ -70,15 +71,17 @@ def downsample_all_files(year, month):
     match_file = f'{output_directory}/wind_speed.tif'
     make_dir(output_directory)
     calculate_windspeed_n_direction(wind_file, output_directory)
-    resample_sst_raster(sst_file, match_file, output_directory)
     resample_chla_raster(chla_file, match_file, output_directory)
+    match_file2 = f'{output_directory}/chlor_a_resampled.tif' # SI usamos chlor a como referencia, hay que hacer otros ajustes
+    resample_sst_raster(sst_file, match_file, output_directory) # Cambiar match_file por match_file2 si se usa chla como referencia
+    
 
 
 # Lista de tuplas con los pares (año, mes)
 year_month_list = [
-    ("2014", "01"), ("2014", "02"), ("2014", "03"),
+    ("2014", "01"), ("2014", "02"), ("2014", "03"), ("2014", "04"), ("2014", "05"), ("2014", "12"),
     ("2015", "01"), ("2015", "02"), ("2015", "03"),
-    ("2016", "02"), ("2016", "03"),
+    ("2016", "02"), ("2016", "03"), ("2016", "04"),
     ("2017", "02"), ("2017", "03"),
     ("2018", "01"), ("2018", "02")
 ]
