@@ -74,12 +74,15 @@ def downsample_all_files(year, month):
     resample_chla_raster(chla_file, match_file, output_directory)
 
 
-years = [ f'{i:04d}' for i in range(2014, 2019)]
-months = [f'{i:02d}' for i in range(1, 4)]
+# Lista de tuplas con los pares (año, mes)
+year_month_list = [
+    ("2014", "01"), ("2014", "02"), ("2014", "03"),
+    ("2015", "01"), ("2015", "02"), ("2015", "03"),
+    ("2016", "02"), ("2016", "03"),
+    ("2017", "02"), ("2017", "03"),
+    ("2018", "01"), ("2018", "02")
+]
 
-
-for year in years:
-    for month in months:
-        print(f'Processing {year}-{month}')
-        downsample_all_files(year, month)
-
+for year, month in year_month_list:
+    print(f'Processing {year}-{month}')
+    downsample_all_files(year, month)
